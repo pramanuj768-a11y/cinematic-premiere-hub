@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { Film, Clapperboard, TrendingUp, Upload, User } from "lucide-react";
+import { Film, Clapperboard, TrendingUp, Upload, User, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { label: "Discover", path: "/", icon: Film },
@@ -10,6 +11,7 @@ const navItems = [
 
 export function Navbar() {
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
@@ -43,13 +45,30 @@ export function Navbar() {
           })}
         </div>
 
-        <Link
-          to="/profile"
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
-        >
-          <User className="w-4 h-4" />
-          <span className="hidden sm:inline">Profile</span>
-        </Link>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <Link
+              to="/profile"
+              className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+            >
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </Link>
+            <button
+              onClick={signOut}
+              className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-destructive hover:bg-secondary/50 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/auth"
+            className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:brightness-110 transition"
+          >
+            Sign In
+          </Link>
+        )}
       </div>
     </nav>
   );
